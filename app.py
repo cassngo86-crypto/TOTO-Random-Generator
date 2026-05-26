@@ -5,6 +5,8 @@ from itertools import combinations
 
 # 1. Historical Data (Draws 4153 to 4183) to calculate pair weights
 HISTORICAL_DRAWS = [
+    [11, 12, 24, 33, 38, 46],# 4185
+    [11, 18, 25, 36, 39, 49],# 4184
     [7, 18, 32, 37, 41, 44], # 4183
     [4, 8, 21, 25, 43, 46],  # 4182
     [6, 10, 25, 26, 34, 40], # 4181
@@ -66,7 +68,7 @@ def is_balanced(combination):
     total_sum = sum(combination)
     evens = len([n for n in combination if n % 2 == 0])
     
-    if not (100 <= total_sum <= 175):
+    if not (90 <= total_sum <= 196):
         return False
     if evens in [0, 1, 5, 6]:
         return False
