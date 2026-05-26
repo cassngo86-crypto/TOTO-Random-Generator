@@ -116,7 +116,7 @@ st.markdown("""
 This model constructs 6-number combinations using a **weighted random sampling** approach:
 * **Seeded Strategy:** Pairs are anchored using historically frequent co-occurrence numbers (Draws 4153–4183).
 * **Portfolio Constraints:** Targets a distribution of **1 Hot, 4 Warm, and 1 Cold** number.
-* **Structural Guardrails:** Rejects extreme odd/even balances and limits the total ticket sum to between **100 and 175**.
+* **Structural Guardrails:** Rejects extreme odd/even balances and limits the total ticket sum to between **90 and 196**.
 """)
 
 st.write("---")
