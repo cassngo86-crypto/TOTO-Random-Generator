@@ -187,6 +187,6 @@ if st.button("Generate Numbers", type="primary"):
         odds = 6 - evens
         
         formatted_numbers = "   ".join([f"`[{n:02d}]`" for n in ticket])
-        st.info(f"**Set {i+1}:** {formatted_numbers} | **Sum:** {ticket_sum}| **Average:** {ticket_ave} | **Split (O/E):** {odds}:{evens}")
+        st.info(f"**Set {i+1}:** {formatted_numbers} | **Sum:** {ticket_sum}| **Average:** {ticket_ave:.1f} | **Split (O/E):** {odds}:{evens}")
         
     st.balloons()
