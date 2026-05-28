@@ -182,7 +182,7 @@ if st.button("Generate Numbers", type="primary"):
     for i in range(num_tickets):
         ticket = generate_pair_weighted_pick()
         ticket_sum = sum(ticket)
-        ticket_ave = average(tickets)
+        ticket_ave = average(ticket)
         evens = len([n for n in ticket if n % 2 == 0])
         odds = 6 - ev
         
