@@ -182,10 +182,11 @@ if st.button("Generate Numbers", type="primary"):
     for i in range(num_tickets):
         ticket = generate_pair_weighted_pick()
         ticket_sum = sum(ticket)
+        ticket_ave = average(tickets)
         evens = len([n for n in ticket if n % 2 == 0])
-        odds = 6 - evens
+        odds = 6 - ev
         
         formatted_numbers = "   ".join([f"`[{n:02d}]`" for n in ticket])
-        st.info(f"**Set {i+1}:** {formatted_numbers} | **Sum:** {ticket_sum} | **Split (O/E):** {odds}:{evens}")
+        st.info(f"**Set {i+1}:** {formatted_numbers} | **Sum:** {ticket_sum}| **Average:** {ticket_ave} | **Split (O/E):** {odds}:{evens}")
         
     st.balloons()
