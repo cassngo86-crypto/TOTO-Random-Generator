@@ -184,7 +184,7 @@ if st.button("Generate Numbers", type="primary"):
         ticket_sum = sum(ticket)
         ticket_ave = sum(ticket) / len(ticket)
         evens = len([n for n in ticket if n % 2 == 0])
-        odds = 6 - ev
+        odds = 6 - evens
         
         formatted_numbers = "   ".join([f"`[{n:02d}]`" for n in ticket])
         st.info(f"**Set {i+1}:** {formatted_numbers} | **Sum:** {ticket_sum}| **Average:** {ticket_ave} | **Split (O/E):** {odds}:{evens}")
