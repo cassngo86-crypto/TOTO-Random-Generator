@@ -132,13 +132,15 @@ def generate_pair_weighted_pick():
             chosen_partner = random.choices([p[0] for p in partners], weights=weights, k=1)[0]
             ticket.append(chosen_partner)
         
+        # Step C: Fill the remaining slots dynamically from remaining macro-pools
+        # New Adjusted Strategy: Limit Hot to max 1, allow up to 2 Cold, fill rest with Warm
         while len(ticket) < 6:
             current_hot = [n for n in ticket if n in active_hot]
             current_cold = [n for n in ticket if n in active_cold]
             
-            if len(current_hot) < 1:
+            if len(current_hot) < 1 and random.random() < 0.30:  # 30% chance to anchor a hot number
                 pool = [n for n in active_hot if n not in ticket]
-            elif len(current_cold) < 1:
+            elif len(current_cold) < 2 and (not pool or random.random() < 0.40): # Lean into expanded Cold pool
                 pool = [n for n in active_cold if n not in ticket]
             else:
                 pool = [n for n in active_warm if n not in ticket]
