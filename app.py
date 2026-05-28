@@ -41,8 +41,8 @@ HISTORICAL_DRAWS = [
 ]
 
 # 2. Define macro-tier pools
-HOT_POOL = [3, 4, 6, 15, 23, 30, 43, 48]
-COLD_POOL = [11, 19, 20, 21, 27, 36]
+HOT_POOL = [3, 4, 6, 8,15, 23, 30, 43, 46,48]
+COLD_POOL = [2, 9, 17,20, 21, 29,27,31, 40,42,45]
 WARM_POOL = [n for n in range(1, 50) if n not in HOT_POOL and n not in COLD_POOL]
 
 def calculate_pair_weights(draws):
@@ -68,7 +68,7 @@ def is_balanced(combination):
     total_sum = sum(combination)
     evens = len([n for n in combination if n % 2 == 0])
     
-    if not (90 <= total_sum <= 196):
+    if not (84 <= total_sum <= 199):
         return False
     if evens in [0, 1, 5, 6]:
         return False
