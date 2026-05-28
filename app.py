@@ -112,7 +112,7 @@ def is_balanced(combination):
     if evens in [0, 1, 5, 6]:
         return False
     return True
-
+#
 def generate_pair_weighted_pick():
     """Generates a combination seeded by a strong historical pair constraint."""
     # Prevent crashing if automated calculations empty out specific strategy segments
@@ -133,18 +133,21 @@ def generate_pair_weighted_pick():
             ticket.append(chosen_partner)
         
         # Step C: Fill the remaining slots dynamically from remaining macro-pools
-        # New Adjusted Strategy: Limit Hot to max 1, allow up to 2 Cold, fill rest with Warm
         while len(ticket) < 6:
             current_hot = [n for n in ticket if n in active_hot]
             current_cold = [n for n in ticket if n in active_cold]
             
+            # Determine which pool to draw from based on probabilities and current counts
             if len(current_hot) < 1 and random.random() < 0.30:  # 30% chance to anchor a hot number
                 pool = [n for n in active_hot if n not in ticket]
-            elif len(current_cold) < 2 and (not pool or random.random() < 0.40): # Lean into expanded Cold pool
+            elif len(current_cold) < 2 and random.random() < 0.40:  # 40% chance to pick a cold number
                 pool = [n for n in active_cold if n not in ticket]
             else:
                 pool = [n for n in active_warm if n not in ticket]
                 
+            # Safety fallback: if the chosen pool ended up empty, default to warm or any available numbers
+            if not pool: 
+                pool = [n for n in active_warm if n not in ticket]
             if not pool: 
                 pool = [n for n in range(1, 50) if n not in ticket]
                 
@@ -153,7 +156,7 @@ def generate_pair_weighted_pick():
         final_combination = sorted(ticket)
         if is_balanced(final_combination):
             return final_combination
-
+            
 # --- WEB APP MAIN LAYOUT UI ---
 st.title("🎯 Co-Occurrence Pair TOTO Generator")
 st.markdown("""
