@@ -112,36 +112,50 @@ def is_balanced(combination):
     if evens in [0, 1, 5, 6]:
         return False
     return True
-
+#
 def generate_pair_weighted_pick():
+    """
+    Generates a combination based on a strict portfolio distribution:
+    - 20% Hot (~1 number)
+    - 20% Cold (~1 number)
+    - 60% Warm (~4 numbers) -> Strictly excluding numbers from the previous draw
+    """
     active_hot = HOT_POOL if HOT_POOL else [3, 4, 6, 8, 15, 23, 30, 43, 46, 48]
     active_cold = COLD_POOL if COLD_POOL else [2, 9, 17, 20, 21, 29, 27, 31, 40, 42, 45]
     active_warm = WARM_POOL if WARM_POOL else [n for n in range(1, 50) if n not in active_hot and n not in active_cold]
 
+    # Get the previous draw numbers to apply your custom Warm restriction
+    previous_draw_numbers = st.session_state.historical_draws[0]
+
     while True:
-        anchor = random.choice(active_hot)
-        ticket = [anchor]
-        has_partners = anchor in PARTNER_WEIGHTS and len(PARTNER_WEIGHTS[anchor]) > 0
+        ticket = []
         
-        if has_partners:
-            partners = PARTNER_WEIGHTS[anchor]
-            weights = [p[1] for p in partners]
-            chosen_partner = random.choices([p[0] for p in partners], weights=weights, k=1)[0]
-            ticket.append(chosen_partner)
-        
+        # 1. OPTIONAL REPEATER SEED (55% historical probability)
+        # If active, it pre-fills 1 slot using a number from the previous draw
+        if random.random() < 0.55:
+            repeater_number = random.choice(previous_draw_numbers)
+            ticket.append(repeater_number)
+
+        # 2. TARGET STRATEGY COUNTS (20% Hot, 20% Cold, 60% Warm)
+        # Target: Exactly 1 Hot, Exactly 1 Cold, Exactly 4 Warm
         while len(ticket) < 6:
             current_hot = [n for n in ticket if n in active_hot]
             current_cold = [n for n in ticket if n in active_cold]
+            current_warm = [n for n in ticket if n in active_warm]
             
-            if len(current_hot) < 1 and random.random() < 0.20:
+            # Fill Hot Slot (Target: 1)
+            if len(current_hot) < 1:
                 pool = [n for n in active_hot if n not in ticket]
-            elif len(current_cold) < 2 and random.random() < 0.20:
+            
+            # Fill Cold Slot (Target: 1)
+            elif len(current_cold) < 1:
                 pool = [n for n in active_cold if n not in ticket]
+            
+            # Fill Warm Slots (Target: 4) - CRITICAL: Applying your previous draw exclusion rule
             else:
-                pool = [n for n in active_warm if n not in ticket]
+                pool = [n for n in active_warm if n not in ticket and n not in previous_draw_numbers]
                 
-            if not pool: 
-                pool = [n for n in active_warm if n not in ticket]
+            # Emergency fallback loop in case the filtered warm pool runs dry
             if not pool: 
                 pool = [n for n in range(1, 50) if n not in ticket]
                 
