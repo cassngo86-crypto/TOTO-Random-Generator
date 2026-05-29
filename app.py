@@ -138,9 +138,9 @@ def generate_pair_weighted_pick():
             current_cold = [n for n in ticket if n in active_cold]
             
             # Determine which pool to draw from based on probabilities and current counts
-            if len(current_hot) < 1 and random.random() < 0.30:  # 30% chance to anchor a hot number
+            if len(current_hot) < 1 and random.random() < 0.20:  # 20% chance to anchor a hot number
                 pool = [n for n in active_hot if n not in ticket]
-            elif len(current_cold) < 2 and random.random() < 0.40:  # 40% chance to pick a cold number
+            elif len(current_cold) < 2 and random.random() < 0.20:  # 20% chance to pick a cold number
                 pool = [n for n in active_cold if n not in ticket]
             else:
                 pool = [n for n in active_warm if n not in ticket]
