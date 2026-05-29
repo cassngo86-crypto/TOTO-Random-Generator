@@ -116,6 +116,7 @@ def is_balanced(combination):
 def generate_pair_weighted_pick():
     """
     Generates a combination based on a strict portfolio distribution:
+    - FORCED: At least 1 number must be a repeater from the previous draw
     - 20% Hot (~1 number)
     - 20% Cold (~1 number)
     - 60% Warm (~4 numbers) -> Strictly excluding numbers from the previous draw
@@ -130,18 +131,16 @@ def generate_pair_weighted_pick():
     while True:
         ticket = []
         
-        # 1. OPTIONAL REPEATER SEED (55% historical probability)
-        # If active, it pre-fills 1 slot using a number from the previous draw
-        if random.random() < 0.55:
-            repeater_number = random.choice(previous_draw_numbers)
-            ticket.append(repeater_number)
+        # 1. FORCED REPEATER SEED (100% Guarantee)
+        # Every single ticket generated will now pull exactly 1 number from the previous draw first
+        repeater_number = random.choice(previous_draw_numbers)
+        ticket.append(repeater_number)
 
         # 2. TARGET STRATEGY COUNTS (20% Hot, 20% Cold, 60% Warm)
         # Target: Exactly 1 Hot, Exactly 1 Cold, Exactly 4 Warm
         while len(ticket) < 6:
             current_hot = [n for n in ticket if n in active_hot]
             current_cold = [n for n in ticket if n in active_cold]
-            current_warm = [n for n in ticket if n in active_warm]
             
             # Fill Hot Slot (Target: 1)
             if len(current_hot) < 1:
@@ -151,11 +150,11 @@ def generate_pair_weighted_pick():
             elif len(current_cold) < 1:
                 pool = [n for n in active_cold if n not in ticket]
             
-            # Fill Warm Slots (Target: 4) - CRITICAL: Applying your previous draw exclusion rule
+            # Fill Warm Slots (Target: 4) - Strictly excluding previous draw numbers
             else:
                 pool = [n for n in active_warm if n not in ticket and n not in previous_draw_numbers]
                 
-            # Emergency fallback loop in case the filtered warm pool runs dry
+            # Emergency fallback loop in case the filtered pool runs dry
             if not pool: 
                 pool = [n for n in range(1, 50) if n not in ticket]
                 
