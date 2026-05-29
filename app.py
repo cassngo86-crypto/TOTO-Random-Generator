@@ -133,9 +133,9 @@ def generate_pair_weighted_pick():
             current_hot = [n for n in ticket if n in active_hot]
             current_cold = [n for n in ticket if n in active_cold]
             
-            if len(current_hot) < 1 and random.random() < 0.30:
+            if len(current_hot) < 1 and random.random() < 0.20:
                 pool = [n for n in active_hot if n not in ticket]
-            elif len(current_cold) < 2 and random.random() < 0.40:
+            elif len(current_cold) < 2 and random.random() < 0.20:
                 pool = [n for n in active_cold if n not in ticket]
             else:
                 pool = [n for n in active_warm if n not in ticket]
