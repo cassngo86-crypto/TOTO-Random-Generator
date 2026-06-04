@@ -1,41 +1,67 @@
 import streamlit as st
 import random
 import os
+import requests
+import base64
 from collections import Counter
 from itertools import combinations
 
-# --- STREAMLIT UI SETUP ---
-st.set_page_config(page_title="Advanced TOTO Generator", page_icon="🎯", layout="centered")
+# --- GITHUB REPOSITORY CONFIGURATION ---
+# Replace these with your actual GitHub username and repository name
+GITHUB_USER = "cassngo86-crypto "
+GITHUB_REPO = "toto-random-generator"
+FILE_PATH = "draws_database.txt"
+# Pulls the secret token securely from your Streamlit dashboard settings
+GITHUB_TOKEN = st.secrets.get("GITHUB_TOKEN", "")
 
 DB_FILE = "draws_database.txt"
 
-# --- FILE HANDLING FUNCTIONS (PERMANENT STORAGE) ---
 def load_draws():
-    """Reads the saved draw history from the text file file database."""
+    """Reads the saved draw history from the local text file fallback database."""
     if not os.path.exists(DB_FILE):
-        # Emergency fallback if file is missing
         return [[11, 12, 24, 33, 38, 46]]
-    
     draws = []
     with open(DB_FILE, "r") as f:
         for line in f:
             line = line.strip()
             if line:
-                # Convert comma string line back to list of integers
-                draw_list = [int(x) for x in line.split(",")]
-                draws.append(draw_list)
+                draws.append([int(x) for x in line.split(",")])
     return draws
 
 def save_new_draw(new_draw_list):
-    """Prepends a new draw result to the top of our permanent text database."""
+    """Prepends a new draw result locally and pushes the file update to GitHub."""
     current_draws = load_draws()
-    # Insert new draw at index 0 (the top)
     current_draws.insert(0, new_draw_list)
     
-    # Rewrite the file completely with the updated history
+    # 1. Update the local container file copy
+    file_content = ""
+    for draw in current_draws:
+        file_content += ",".join(map(str, draw)) + "\n"
+        
     with open(DB_FILE, "w") as f:
-        for draw in current_draws:
-            f.write(",".join(map(str, draw)) + "\n")
+        f.write(file_content)
+        
+    # 2. Push directly to GitHub using the GitHub API
+    if GITHUB_TOKEN:
+        url = f"https://api.github.com/repos/{GITHUB_USER}/{GITHUB_REPO}/contents/{FILE_PATH}"
+        headers = {
+            "Authorization": f"token {GITHUB_TOKEN}",
+            "Accept": "application/vnd.github.v3+json"
+        }
+        
+        # We need to get the file's current "sha" fingerprint to modify it
+        res = requests.get(url, headers=headers)
+        sha = res.json().get("sha", "") if res.status_code == 200 else ""
+        
+        # Package the commit payload
+        payload = {
+            "message": f"Automated update: Added draw {new_draw_list}",
+            "content": base64.b64encode(file_content.encode("utf-8")).decode("utf-8"),
+            "sha": sha
+        }
+        
+        # Send the commit to your GitHub repository
+        requests.put(url, json=payload, headers=headers)
 
 # Initialize historical data in session state from the permanent file structure
 if "historical_draws" not in st.session_state:
