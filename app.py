@@ -100,8 +100,8 @@ def process_lottery_analytics(draws):
     all_numbers = [num for draw in draws for num in draw]
     frequency_map = Counter(all_numbers)
     
-    hot_pool = [n for n in range(1, 50) if frequency_map[n] >= 6]
-    cold_pool = [n for n in range(1, 50) if frequency_map[n] <= 2]
+    hot_pool = [n for n in range(1, 50) if frequency_map[n] >= 8]
+    cold_pool = [n for n in range(1, 50) if frequency_map[n] <= 3]
     warm_pool = [n for n in range(1, 50) if n not in hot_pool and n not in cold_pool]
     
     pair_counts = Counter()
