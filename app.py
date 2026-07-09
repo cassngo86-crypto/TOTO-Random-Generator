@@ -175,7 +175,7 @@ st.success(f"✅ **Database Status:** Connected | **Latest Tracked Draw:** `[ {f
 
 st.markdown("""
 This model constructs 6-number combinations dynamically using an **automated engine**:
-* 🔥 **Hot Pool:** Freq $\ge 6$ | ❄️ **Cold Pool:** Freq $\le 2$ | 📈 **Warm Pool:** Everything else (excluding previous draw numbers).
+* 🔥 **Hot Pool:** Freq $\ge 7$ | ❄️ **Cold Pool:** Freq $\le 3$ | 📈 **Warm Pool:** Everything else (excluding previous draw numbers).
 """)
 
 with st.expander("📊 View Dynamically Calculated Frequency Pools", expanded=False):
