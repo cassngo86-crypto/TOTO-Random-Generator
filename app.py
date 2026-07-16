@@ -144,7 +144,7 @@ def generate_pair_weighted_pick():
         repeater_number = random.choice(previous_draw_numbers)
         ticket.append(repeater_number)
 
-        # 2. TARGET STRATEGY COUNTS (20% Hot, 20% Cold, 60% Warm)
+        # 2. TARGET STRATEGY COUNTS (20% Hot, 10% Cold, 70% Warm)
         while len(ticket) < 6:
             current_hot = [n for n in ticket if n in active_hot]
             current_cold = [n for n in ticket if n in active_cold]
