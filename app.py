@@ -100,8 +100,8 @@ def process_lottery_analytics(draws):
     all_numbers = [num for draw in draws for num in draw]
     frequency_map = Counter(all_numbers)
     
-    hot_pool = [n for n in range(1, 50) if frequency_map[n] >= 7]
-    cold_pool = [n for n in range(1, 50) if frequency_map[n] <= 3]
+    hot_pool = [n for n in range(1, 50) if frequency_map[n] >= 8]
+    cold_pool = [n for n in range(1, 50) if frequency_map[n] <= 4]
     warm_pool = [n for n in range(1, 50) if n not in hot_pool and n not in cold_pool]
     
     pair_counts = Counter()
@@ -175,7 +175,7 @@ st.success(f"✅ **Database Status:** Connected | **Latest Tracked Draw:** `[ {f
 
 st.markdown("""
 This model constructs 6-number combinations dynamically using an **automated engine**:
-* 🔥 **Hot Pool:** Freq $\ge 7$ | ❄️ **Cold Pool:** Freq $\le 3$ | 📈 **Warm Pool:** Everything else (excluding previous draw numbers).
+* 🔥 **Hot Pool:** Freq $\ge 8$ | ❄️ **Cold Pool:** Freq $\le 4$ | 📈 **Warm Pool:** Everything else (excluding previous draw numbers).
 """)
 
 with st.expander("📊 View Dynamically Calculated Frequency Pools", expanded=False):
